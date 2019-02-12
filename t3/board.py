@@ -162,9 +162,9 @@ class Board(object):
         state[board_index + player_index] |= 1 << (3 * r + c)
         updated_board = state[board_index + player_index]
 
-        wins = (07, 070, 0700, 0111, 0222, 0444, 0421, 0124)
+        wins = (0o7, 0o70, 0o700, 0o111, 0o222, 0o444, 0o421, 0o124)
 
-        full = (state[board_index] | state[board_index+1] == 0777)
+        full = (state[board_index] | state[board_index+1] == 0o777)
         if any(updated_board & w == w for w in wins):
             state[18 + player_index] |= 1 << (3 * R + C)
         elif full:
@@ -243,13 +243,13 @@ class Board(object):
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
-        wins = (07, 070, 0700, 0111, 0222, 0444, 0421, 0124)
+        wins = (0o7, 0o70, 0o700, 0o111, 0o222, 0o444, 0o421, 0o124)
 
         if any(w & p1 == w for w in wins):
             return True
         if any(w & p2 == w for w in wins):
             return True
-        if state[18] | state[19] == 0777:
+        if state[18] | state[19] == 0o777:
             return True
 
         return False
@@ -262,13 +262,13 @@ class Board(object):
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
-        wins = (07, 070, 0700, 0111, 0222, 0444, 0421, 0124)
+        wins = (0o7, 0o70, 0o700, 0o111, 0o222, 0o444, 0o421, 0o124)
 
         if any(w & p1 == w for w in wins):
             return {1: 1, 2: 0}
         if any(w & p2 == w for w in wins):
             return {1: 0, 2: 1}
-        if state[18] | state[19] == 0777:
+        if state[18] | state[19] == 0o777:
             return {1: 0.5, 2: 0.5}
 
     def points_values(self, history):
@@ -279,13 +279,13 @@ class Board(object):
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
-        wins = (07, 070, 0700, 0111, 0222, 0444, 0421, 0124)
+        wins = (0o7, 0o70, 0o700, 0o111, 0o222, 0o444, 0o421, 0o124)
 
         if any(w & p1 == w for w in wins):
             return {1: 1, 2: -1}
         if any(w & p2 == w for w in wins):
             return {1: -1, 2: 1}
-        if state[18] | state[19] == 0777:
+        if state[18] | state[19] == 0o777:
             return {1: 0, 2: 0}
 
     def winner_message(self, winners):
