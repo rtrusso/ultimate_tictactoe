@@ -288,6 +288,15 @@ class Board(object):
         if state[18] | state[19] == 0o777:
             return {1: 0, 2: 0}
 
+    # required by framework
+    def winning_players(self, winners):
+        winners = sorted((v, k) for k, v in winners.items())
+        value, winner = winners[-1]
+        if value == 0.5:
+            return []
+        return [winner]
+
+    # required by framework
     def winner_message(self, winners):
         winners = sorted((v, k) for k, v in winners.items())
         value, winner = winners[-1]
