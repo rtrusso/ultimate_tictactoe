@@ -33,6 +33,8 @@ class Board(object):
                 self.to_notation(self.to_compact_action(action)))
         bot += u"Player: {0}\n".format(state['player'])
 
+        constraint = (state['constraint']['outer-row'], state['constraint']['outer-column'])
+
         return (
             top +
             div.join(
@@ -40,7 +42,8 @@ class Board(object):
                     u"\u2551" +
                     u"\u2551".join(
                         u"\u2502".join(
-                            pieces.get((R, C, r, c), " ") for c in range(3)
+                            pieces.get((R, C, r, c), u"\u2592" if constraint in ((R, C), (None, None)) else " ")
+                            for c in range(3)
                         )
                         for C in range(3)
                     ) +
@@ -178,8 +181,7 @@ class Board(object):
 
         return tuple(state)
 
-    def is_legal(self, history, action):
-        state = history[-1]
+    def is_legal(self, state, action):
         R, C, r, c = action
 
         # Is action out of bounds?
@@ -208,8 +210,7 @@ class Board(object):
         # Otherwise, we must play in the proper sub-board.
         return (R, C) == (state[20], state[21])
 
-    def legal_actions(self, history):
-        state = history[-1]
+    def legal_actions(self, state):
         R, C = state[20], state[21]
         Rset, Cset = (R,), (C,)
         if R is None:
@@ -238,8 +239,7 @@ class Board(object):
     def current_player(self, state):
         return state[-1]
 
-    def is_ended(self, history):
-        state = history[-1]
+    def is_ended(self, state):
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
@@ -254,11 +254,10 @@ class Board(object):
 
         return False
 
-    def win_values(self, history):
-        if not self.is_ended(history):
+    def win_values(self, state):
+        if not self.is_ended(state):
             return
 
-        state = history[-1]
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
@@ -271,11 +270,10 @@ class Board(object):
         if state[18] | state[19] == 0o777:
             return {1: 0.5, 2: 0.5}
 
-    def points_values(self, history):
-        if not self.is_ended(history):
+    def points_values(self, state):
+        if not self.is_ended(state):
             return
 
-        state = history[-1]
         p1 = state[18] & ~state[19]
         p2 = state[19] & ~state[18]
 
